@@ -59,5 +59,6 @@ def count_cpu():
     test_data = lmp_data_cpu_core_4(datetime.now().isoformat(), 'glob', dispatch_count[0], 
     dispatch_count[1], dispatch_count[2], dispatch_count[3])
     write2db(data_struct, test_data, influx_client, DatabaseType.INFLUXDB.value)
-while 1:
-    count_cpu()
+def gen_dispatch_count():
+    while 1:
+        count_cpu()

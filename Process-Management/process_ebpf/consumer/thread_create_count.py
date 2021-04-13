@@ -59,8 +59,10 @@ def count_clone():
     for k, v in b['dist'].items():
         test_data = lmp_data(datetime.now().isoformat(), 'glob', proc_list[i], count_list[i])
         write2db(data_struct, test_data, influx_client, DatabaseType.INFLUXDB.value) 
-while 1:
-    count_clone()
+        
+def gen_count_clone():
+    while 1:
+        count_clone()
 
 
 

@@ -109,5 +109,6 @@ def queue_lentacy():
     dispatch_lentacy[1], dispatch_lentacy[2], dispatch_lentacy[3])
     print(dispatch_lentacy[0], "  ", dispatch_lentacy[1],"     ", dispatch_lentacy[2], "         ", dispatch_lentacy[3])
     write2db(data_struct, test_data, influx_client, DatabaseType.INFLUXDB.value)
-while 1:
-    queue_lentacy()
+def gen_queue_lentacy():
+    while 1:
+        queue_lentacy()

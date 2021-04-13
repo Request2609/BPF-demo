@@ -90,13 +90,11 @@ def get_queue_length():
             continue
         print(k.value, v.value)
 
-timer = threading.Timer(1, get_queue_length)
-timer.start()
-while 1:
-    sleep(1)
-    tmp = mp
-    test_data = lmp_data_cpu_core_4(datetime.now().isoformat(), 'glob', tmp[0], tmp[1], tmp[2], tmp[3])
-    write2db(data_struct, test_data, influx_client, DatabaseType.INFLUXDB.value)
-
-        
-    
+def gen_runqueue_length():
+    timer = threading.Timer(1, get_queue_length)
+    timer.start()
+    while 1:
+        sleep(1)
+        tmp = mp
+        test_data = lmp_data_cpu_core_4(datetime.now().isoformat(), 'glob', tmp[0], tmp[1], tmp[2], tmp[3])
+        write2db(data_struct, test_data, influx_client, DatabaseType.INFLUXDB.value)

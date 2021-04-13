@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head> 
+<meta charset="utf-8"> 
+<title>进程指标监控可视化系统</title> 
+</head>
+<body>
+  
+<form action="/admin/get_req_param" method="post">
+  <input type="checkbox" name="vehicle" value="runqueue_length"> 进程运行队列长度<br>
+  <input type="checkbox" name="vehicle" value="thread_create_count" checked="checked">进程创建线程的频率<br>
+  <input type="checkbox" name="vehicle" value="wakeuptime" checked="checked">进程被再次唤醒的延时<br>
+  <input type="checkbox" name="vehicle" value="dispatch_count" checked="checked">CPU调度进程的频率<br>
+  <input type="checkbox" name="vehicle" value="runqueue_latency" checked="checked">运行队列的延时<br>
+  <input type="submit" value="提交">
+</form>
+
+</body>
+</html>

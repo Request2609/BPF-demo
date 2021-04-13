@@ -83,7 +83,7 @@ data_struct = {"measurement": 'core_dispacher_times',
                "tags": ['glob', ],
                "fields": ['process_name', 'lantency']}
 
-def wakeuptime():
+def wakeuptime(count):
     # initialize BPF
     b = BPF(text=bpf_text)
     b.attach_kprobe(event="schedule", fn_name="offcpu")
@@ -94,7 +94,7 @@ def wakeuptime():
         exit()
     while (1):
         try:
-            sleep(2)
+            sleep(count)
         except KeyboardInterrupt:
         # as cleanup can take many seconds, trap Ctrl-C:
             exit()
@@ -108,9 +108,8 @@ def wakeuptime():
             if k.w_k_stack_id == -errno.ENOMEM:
                 missing_stacks += 1
                 continue
-            printb(b"    %-16s %s" % (b"waker:", k.waker))
-            print("        %d\n" % v.value)
-            test_data = lmp_data(datetime.now().isoformat(), 'glob', k.waker, v.value)
+            print("%s        %d\n" % (k.waker.decode('utf-8'), v.value))
+            test_data = lmp_data(datetime.now().isoformat(), 'glob', k.waker.decode('utf-8'), v.value)
             write2db(data_struct, test_data, influx_client, DatabaseType.INFLUXDB.value)
         counts.clear()
-wakeuptime()
+wakeuptime(2)
