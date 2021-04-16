@@ -5,10 +5,7 @@ import yaml
 import os
 from enum import IntEnum
 from enum import Enum, unique
-from config import cfg
 
-DBNAME = cfg["influxdb"]["dbname"]
-USER = cfg["influxdb"]["user"]
 
 current_path = os.path.abspath(".")
 yaml_path = os.path.join(current_path, "config.yaml")

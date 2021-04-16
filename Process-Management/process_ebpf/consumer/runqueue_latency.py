@@ -4,7 +4,6 @@ from __future__ import print_function
 from bcc import BPF
 from time import sleep, strftime
 import argparse
-from const import DatabaseType
 from init_db import influx_client
 from db_modules import write2db
 from datetime import datetime
@@ -110,5 +109,6 @@ def queue_lentacy():
     print(dispatch_lentacy[0], "  ", dispatch_lentacy[1],"     ", dispatch_lentacy[2], "         ", dispatch_lentacy[3])
     write2db(data_struct, test_data, influx_client, DatabaseType.INFLUXDB.value)
 def gen_queue_lentacy():
+    print("进程队列延时")
     while 1:
         queue_lentacy()

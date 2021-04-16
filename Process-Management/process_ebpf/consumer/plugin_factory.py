@@ -11,12 +11,13 @@ class plugin:
     def get_indicator_type(self):
         return self.indicator_type
     def start_func(self):
-        self.func(self.indicator_type)
+        self.func()
 
 class runqueue_length(plugin):
     def __init__(self, indicator_type, func):
         self.indicator_type = indicator_type 
         self.func = func
+
 class thread_create_count(plugin):
     def __init__(self, indicator_type, func):
         self.indicator_type = indicator_type 

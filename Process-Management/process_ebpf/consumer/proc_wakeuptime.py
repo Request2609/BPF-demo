@@ -11,10 +11,10 @@ from time import sleep, strftime
 import signal
 import errno
 from sys import stderr
-from const import DatabaseType
 from init_db import influx_client
 from db_modules import write2db
 from datetime import datetime
+from config import DatabaseType
 
 # define BPF program
 bpf_text = """
@@ -78,14 +78,14 @@ class lmp_data(object):
         self.process_name = process_name
         self.lantency = lantency
 
-data_struct = {"measurement": 'core_dispacher_times',
+data_struct = {"measurement": 'proc_wakeuptime',
                "time": [],
                "tags": ['glob', ],
                "fields": ['process_name', 'lantency']}
-
+b = BPF(text=bpf_text)
 def wakeuptime(count):
+    print("执行wakeup函数")
     # initialize BPF
-    b = BPF(text=bpf_text)
     b.attach_kprobe(event="schedule", fn_name="offcpu")
     b.attach_kprobe(event="try_to_wake_up", fn_name="waker")
     matched = b.num_open_kprobes()
@@ -96,7 +96,6 @@ def wakeuptime(count):
         try:
             sleep(count)
         except KeyboardInterrupt:
-        # as cleanup can take many seconds, trap Ctrl-C:
             exit()
         missing_stacks = 0
         has_enomem = False
@@ -113,5 +112,5 @@ def wakeuptime(count):
             write2db(data_struct, test_data, influx_client, DatabaseType.INFLUXDB.value)
         counts.clear()
         
-def gen_wakeup_time():
-    wakeuptime(2)
+# def gen_wakeup_time():
+wakeuptime(2)

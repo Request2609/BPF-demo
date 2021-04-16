@@ -17,9 +17,9 @@ channel=connection.channel()
 # 声明消息队列，消息将在这个队列传递，如不存在，则创建
 result = channel.queue_declare(MQ_QUEUE_NAME)
 
-for i in range(10):
-    message=json.dumps({'OrderId':"1000%s"%i})
-# 向队列插入数值 routing_key是队列名
-    channel.basic_publish(exchange = '',routing_key = MQ_QUEUE_NAME,body = message)
+def send_message(msg):
+    message=json.dumps(msg)
     print(message)
-connection.close()
+    # 向队列插入数值 routing_key是队列名
+    print("生产者发送了消息")
+    channel.basic_publish(exchange = '',routing_key = MQ_QUEUE_NAME,body = message)

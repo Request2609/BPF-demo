@@ -3,7 +3,6 @@
 from bcc import BPF
 from time import sleep
 from multiprocessing import cpu_count
-from const import DatabaseType
 from init_db import influx_client
 from db_modules import write2db
 from datetime import datetime
@@ -60,5 +59,6 @@ def count_cpu():
     dispatch_count[1], dispatch_count[2], dispatch_count[3])
     write2db(data_struct, test_data, influx_client, DatabaseType.INFLUXDB.value)
 def gen_dispatch_count():
+    print("执行gen_dispatch_count")
     while 1:
         count_cpu()

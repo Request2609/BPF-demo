@@ -6,7 +6,7 @@ from bcc import BPF, PerfType, PerfSWConfig
 from time import sleep, strftime
 import argparse
 import threading
-from const import DatabaseType
+
 from init_db import influx_client
 from db_modules import write2db
 from datetime import datetime

@@ -34,3 +34,8 @@ rabbitmq:
   user: "guest"
   password: "guest"
   v_host: "/"
+
+redis-cli:
+  host: "localhost"
+  port: 6379
+  db_num: 0

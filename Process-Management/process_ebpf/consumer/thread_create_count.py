@@ -1,7 +1,6 @@
 #!/usr/bin/python
 #encoding: utf-8
 from bcc import BPF
-from const import DatabaseType
 from init_db import influx_client
 from db_modules import write2db
 from time import sleep

@@ -3,7 +3,7 @@
 from config import DatabaseType
 from influxdb import InfluxDBClient
 from config import cfg
-
+from application.db_module.init_db import redis_client
 def write2db(datatype, data, client, dbtype):
     """
     :param datatype: 数据类型
@@ -26,6 +26,20 @@ def write2db(datatype, data, client, dbtype):
     elif dbtype == DatabaseType.PROMETHEUS.value:
         pass
 
-def read_from_db(client, query_str):
+def read_from_db(client, tb_name, time, rows):
+    if rows == -1:
+        query_str = "select process_name, lantency from "+tb_name+" where time >='"+time+"'"
+    else:
+        query_str = "select process_name, lantency from "+tb_name+" where time >='"+time+"'  "+"limit "+str(rows)
     res_list = client.query(query_str)
+    return res_list
+
+def redis_lset(key, value):
+    for val in value:
+        redis_client.lpush(key,value)
+    
+def redis_lget(key, count):
+    res_list = []
+    for i in range count:
+        res_list.append(redis_client.blpop(key))
     return res_list

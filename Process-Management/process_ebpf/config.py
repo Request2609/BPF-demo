@@ -5,12 +5,6 @@ import yaml
 import os
 from enum import IntEnum
 from enum import Enum, unique
-from config import cfg
-
-DBNAME = cfg["influxdb"]["dbname"]
-USER = cfg["influxdb"]["user"]
-
-
 
 
 current_path = os.path.abspath(".")
@@ -41,5 +35,17 @@ def read_config():
     with open(yaml_path,'r') as stream:
         cfg =yaml.load(stream,Loader=yaml.FullLoader)
     return cfg
-
 cfg = read_config()
+
+DBNAME = cfg["influxdb"]["dbname"]
+USER = cfg["influxdb"]["user"]
+
+MQ_HOST = cfg["rabbitmq"]["host"]
+MQ_PORT = cfg["rabbitmq"]["port"]
+MQ_USER = cfg["rabbitmq"]["user"]
+MQ_PASSWORD = cfg["rabbitmq"]["password"]
+MQ_QUEUE_NAME = cfg["rabbitmq"]["mq_name"]
+MQ_V_HOST = cfg["rabbitmq"]["v_host"]
+REDIS_HOST = cfg["redis-cli"]["host"]
+REDIS_PORT = cfg["redis-cli"]["port"]
+REDIS_NUM = cfg["redis-cli"]["db_num"]
