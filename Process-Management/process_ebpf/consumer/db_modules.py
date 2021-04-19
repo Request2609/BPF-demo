@@ -3,6 +3,7 @@
 from config import DatabaseType
 from influxdb import InfluxDBClient
 from config import cfg
+from init_db import redis_client
 
 def write2db(datatype, data, client, dbtype):
     """
@@ -26,6 +27,30 @@ def write2db(datatype, data, client, dbtype):
     elif dbtype == DatabaseType.PROMETHEUS.value:
         pass
 
-def read_from_db(client, query_str):
-    res_list = client.query(query_str)
+def read_wakeuptime_from_db(influx_client, tb_name, time, rows, page):
+    print(tb_name, time, rows, page)
+    if rows == -1:
+        query_str = "select process_name, lantency from "+tb_name+" where time >='"+time+"'"
+    else:
+        offset = (page-1)*rows
+        query_str = "select process_name, lantency from "+tb_name+" where time >='"+time+"'  "+"limit "+str(rows)+" offset "+str(offset)
+    print("查询语句:",query_str)
+    res_list = influx_client.query(query_str)
     return res_list
+
+def read_thread_create_count_from_db(influx_client, tb_name, time, rows, page):
+    print(tb_name, time, rows, page)
+    if rows == -1:
+        query_str = "select process_name, count from "+tb_name+" where time >='"+time+"'"
+    else:
+        offset = (page-1)*rows
+        query_str = "select process_name, count from "+tb_name+" where time >='"+time+"'  "+"limit "+str(rows)+" offset "+str(offset)
+    res_list = influx_client.query(query_str) 
+    return res_list
+
+def delete_tb_data(query_str):
+    client.query(query_str)
+
+def redis_lset(key, value):
+    for val in value:
+        redis_client.lpush(key,value)

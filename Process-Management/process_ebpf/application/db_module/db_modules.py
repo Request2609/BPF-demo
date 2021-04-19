@@ -26,11 +26,12 @@ def write2db(datatype, data, client, dbtype):
     elif dbtype == DatabaseType.PROMETHEUS.value:
         pass
 
-def read_from_db(client, tb_name, time, rows):
+def read_from_db(client, tb_name, time, rows, page):
     if rows == -1:
         query_str = "select process_name, lantency from "+tb_name+" where time >='"+time+"'"
     else:
-        query_str = "select process_name, lantency from "+tb_name+" where time >='"+time+"'  "+"limit "+str(rows)
+        offset = (page-1)*rows
+        query_str = "select process_name, lantency from "+tb_name+" where time >='"+time+"'  "+"limit "+str(rows)+" offset "+str(offset)
     res_list = client.query(query_str)
     return res_list
 
@@ -40,6 +41,6 @@ def redis_lset(key, value):
     
 def redis_lget(key, count):
     res_list = []
-    for i in range count:
+    for i in range(count):
         res_list.append(redis_client.blpop(key))
     return res_list

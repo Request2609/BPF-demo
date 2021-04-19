@@ -112,5 +112,5 @@ def wakeuptime(count):
             write2db(data_struct, test_data, influx_client, DatabaseType.INFLUXDB.value)
         counts.clear()
         
-# def gen_wakeup_time():
-wakeuptime(2)
+def gen_wakeup_time():
+    wakeuptime(2)

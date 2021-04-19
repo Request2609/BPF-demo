@@ -1,8 +1,10 @@
 from server import app
+from flask import Flask,request,make_response
 
 @app.route("/")
 def index():
-    print("hello world")
+    resp = make_response('set_cookie')
+    resp.set_cookie('user_key', str(int(round(t * 1000000))))
     return render_template('index.html')
 
 @app.route('/request_info', methods=['POST', 'GET'])

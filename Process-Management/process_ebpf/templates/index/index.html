@@ -5,15 +5,75 @@
 <title>进程指标监控可视化系统</title> 
 </head>
 <body>
-  
+<div style="width:100%;text-align:center">
 <form action="/admin/get_req_param" method="post">
-  <input type="checkbox" name="vehicle" value="runqueue_length"> 进程运行队列长度<br>
-  <input type="checkbox" name="vehicle" value="thread_create_count" checked="checked">进程创建线程的频率<br>
-  <input type="checkbox" name="vehicle" value="wakeuptime" checked="checked">进程被再次唤醒的延时<br>
-  <input type="checkbox" name="vehicle" value="dispatch_count" checked="checked">CPU调度进程的频率<br>
-  <input type="checkbox" name="vehicle" value="runqueue_latency" checked="checked">运行队列的延时<br>
+  <img src="static/linux.jpeg" alt="linux" width="400px" height="200px"><br><br>
+  <input type="checkbox" name="vehicle" value="runqueue_length"style="zoom:180%;"> 进程运行队列长度<br><br>
+  <input type="checkbox" name="vehicle" value="thread_create_count" style="zoom:180%;">进程创建线程的频率<br><br>
+  <input type="checkbox" name="vehicle" value="wakeuptime" style="zoom:180%;">进程被再次唤醒的延时<br><br>
+  <input type="checkbox" name="vehicle" value="dispatch_count" style="zoom:180%;">CPU调度进程的频率<br><br>
+  <input type="checkbox" name="vehicle" value="runqueue_latency" style="zoom:180%;">运行队列的延时<br><br>
+  <input type="button" value="时间查询数据"  onclick="enable_date_time()"/>
+  <input type="button" value="实时展示数据"  onclick="real_time_interval()"/><br><br>
+  <div class="layui-inline">
+    <div class="layui-input-inline" onchange="disable_interval()">
+      开始日期&nbsp;&nbsp;<input type="text" style="width: 300px;height:20px;" class="layui-input" name="date" id="date" placeholder="yyyy-MM-dd"disabled>
+    </div>
+  </div>
+  <br>
+  <div class="layui-inline">
+    <div class="layui-input-inline " onchange="disable_interval()">
+      开始时间&nbsp;&nbsp;<input type="text" style="width: 300px;height:20px;" class="layui-input" name ="time" id="time" placeholder="HH:mm:ss"disabled>
+    </div><br>
+  <div id="label">
+  
+  </div><br>
   <input type="submit" value="提交">
 </form>
+</div>
+<script  type="text/javascript">
+  function real_time_interval(){
+    disable_date_time()
+    document.getElementById("label").innerHTML = "请设置刷新的时间(s)&nbsp;&nbsp;<input type=\"text\" name=\"interval_time\">"
+  }
+  function enable_date_time(){
+    document.getElementById('date').removeAttribute('disabled')
+    document.getElementById('time').removeAttribute('disabled')
+    document.getElementById("label").innerHTML = "请设置刷新的时间(s)&nbsp;&nbsp;<input type=\"text\" name=\"interval_time\">"
+  }
+  function disable_date_time() {
+    document.getElementById('date').value="0000-00-00"
+    document.getElementById('time').value="00:00:00"
+    document.getElementById('date').setAttribute('disabled', 'disabled')
+    document.getElementById('time').setAttribute('disabled', 'disabled')
+  }
 
+  function disable_interval(){
+    document.getElementById('interval_times').setAttribute('disabled', 'disabled')
+  }
+</script>
+<!-- 引入 layui.js 的 <script> 标签最好放置在 html 末尾 -->
+  <script src="static/layui.js"></script>
+  <script  type="text/javascript">
+  layui.use(function(){
+    var layer = layui.layer
+    ,form = layui.form
+    ,laypage = layui.laypage
+    ,element = layui.element
+    ,laydate = layui.laydate
+    ,util = layui.util;
+    //日期
+    laydate.render({
+      elem: '#date'
+      ,type:'date'//datetime
+      ,isInitValue: true
+    });
+    laydate.render({
+      elem: '#time'
+      ,type: 'time'
+      ,isInitValue: true
+    });
+  });
+  </script>
 </body>
 </html>

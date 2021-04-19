@@ -4,7 +4,7 @@ from concurrent.futures import ProcessPoolExecutor,ThreadPoolExecutor
 import threading
 import os,time,random
 
-pool=ThreadPoolExecutor(4)   #不填则默认为cpu的个数*5
+pool=ThreadPoolExecutor(10)   #不填则默认为cpu的个数*5
 
     # start=time.time()
     # for i in range(10):

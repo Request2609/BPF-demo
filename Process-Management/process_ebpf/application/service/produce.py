@@ -22,4 +22,4 @@ def send_message(msg):
     print(message)
     # 向队列插入数值 routing_key是队列名
     print("生产者发送了消息")
-    channel.basic_publish(exchange = '',routing_key = MQ_QUEUE_NAME,body = message)
+    channel.basic_publish(exchange = '',routing_key = MQ_QUEUE_NAME,body = message, properties=pika.BasicProperties(expiration="5000"))
