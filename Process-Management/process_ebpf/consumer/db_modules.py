@@ -28,24 +28,51 @@ def write2db(datatype, data, client, dbtype):
         pass
 
 def read_wakeuptime_from_db(influx_client, tb_name, time, rows, page):
-    print(tb_name, time, rows, page)
+    # print("表信息:",tb_name, time, rows, page)
     if rows == -1:
         query_str = "select process_name, lantency from "+tb_name+" where time >='"+time+"'"
     else:
         offset = (page-1)*rows
         query_str = "select process_name, lantency from "+tb_name+" where time >='"+time+"'  "+"limit "+str(rows)+" offset "+str(offset)
-    print("查询语句:",query_str)
     res_list = influx_client.query(query_str)
     return res_list
 
 def read_thread_create_count_from_db(influx_client, tb_name, time, rows, page):
-    print(tb_name, time, rows, page)
+    # print("表信息:",tb_name, time, rows, page)
     if rows == -1:
         query_str = "select process_name, count from "+tb_name+" where time >='"+time+"'"
     else:
         offset = (page-1)*rows
         query_str = "select process_name, count from "+tb_name+" where time >='"+time+"'  "+"limit "+str(rows)+" offset "+str(offset)
-    res_list = influx_client.query(query_str) 
+    res_list = influx_client.query(query_str)
+    return res_list
+
+def read_sched_count_from_db(influx_client, tb_name, time, rows, page):
+    if rows == -1:
+        query_str = "select cpu_0, cpu_1, cpu_2, cpu_3 from "+tb_name+" where time >='"+time+"'"
+    else:
+        offset = (page-1)* rows
+        query_str =  "select cpu_0, cpu_1, cpu_2, cpu_3 from "+tb_name+" where time >='"+time+"'  "+"limit "+str(rows)+" offset "+str(offset)
+    res_list = influx_client.query(query_str)
+    return res_list
+
+def read_queue_lantency_from_db(influx_client, tb_name, time, rows, page):
+    if rows == -1:
+        query_str = "select cpu_0, cpu_1, cpu_2, cpu_3 from "+tb_name+" where time >='"+time+"'"
+    else:
+        offset = (page-1)* rows
+        query_str =  "select cpu_0, cpu_1, cpu_2, cpu_3 from "+tb_name+" where time >='"+time+"'  "+"limit "+str(rows)+" offset "+str(offset)
+    res_list = influx_client.query(query_str)
+    return res_list
+
+def read_queue_length_from_db(influx_client, tb_name, time, rows, page):
+    # print("表信息:",tb_name, time, rows, page)
+    if rows == -1:
+        query_str = "select cpu_0, cpu_1, cpu_2, cpu_3 from "+tb_name+" where time >='"+time+"'"
+    else:
+        offset = (page-1)* rows
+        query_str =  "select cpu_0, cpu_1, cpu_2, cpu_3 from "+tb_name+" where time >='"+time+"'  "+"limit "+str(rows)+" offset "+str(offset)
+    res_list = influx_client.query(query_str)
     return res_list
 
 def delete_tb_data(query_str):

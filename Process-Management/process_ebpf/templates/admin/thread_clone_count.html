@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+<head>
+    <meta charset="utf-8">
+    <title>进程柱状图显示</title>
+    <script language='javascript' src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
+    <script src="https://cdn.staticfile.org/jquery/2.2.4/jquery.min.js"></script>
+</head>
+<style>
+    body > div {
+        height: 500px;
+    }
+</style>
+
+<body style="height: 100%; margin: 0">
+    <div id="main"></div>
+</body>
+
+
+<script>
+    var chartArr=[]
+        // 指定图表的配置项和数据
+    var myChart = echarts.init(document.getElementById('main'));
+    var option = {
+        title:{
+            x:"center",
+            text:"系统进程调用clone频率统计"
+        },
+        tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'cross',
+                        label: {
+                            backgroundColor: '#6a7985'
+                        }
+                    }
+                },
+        xAxis: {
+            name: '进程',
+            type: 'category',
+            data: [],
+            axisLabel: {
+                interval:0,      //坐标轴刻度标签的显示间隔(在类目轴中有效) 0:显示所有  1：隔一个显示一个 :3：隔三个显示一个...
+                rotate:-20    //标签倾斜的角度，显示不全时可以通过旋转防止标签重叠（-90到90）
+            }
+        },
+        grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+        yAxis: {
+            name: '创建频数',
+            type: 'value'
+        },
+        series: [{
+            data: [],
+            type: 'line',
+            itemStyle: {
+            normal: {
+            lineStyle:{  
+                        color:'#00ffaa'  
+                },
+            label: {
+                show: true,      //开启显示
+                position: 'top', //在上方显示
+                textStyle: {     //数值样式
+                    color: 'black',
+                    fontSize: 16
+                }
+            }
+        }
+    }
+    }]
+    };
+    myChart.setOption(option)
+    chartArr.push(myChart)
+
+
+function get_thread_count_data(){
+    $.ajax({
+        url:"/admin/thread_count_data",
+        success: function(data){
+            option1.xAxis.data = data.process_name;
+            option1.series[0].data = data.count ;
+            chartArr[1].setOption(option1)
+        }
+    })
+}
+setInterval(get_thread_count_data, 3000)
+        //这是关键
+        window.onresize = function () {
+            //循环每一个图表
+            for(var i = 0; i < chartArr.length; i ++) {
+                chartArr[i].resize();
+            }
+        }
+</script>
+</html>

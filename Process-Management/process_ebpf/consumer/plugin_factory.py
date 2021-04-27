@@ -10,8 +10,8 @@ class plugin:
         self.func = None
     def get_indicator_type(self):
         return self.indicator_type
-    def start_func(self):
-        self.func()
+    def start_func(self, exec_length):
+        self.func(exec_length)
 
 class runqueue_length(plugin):
     def __init__(self, indicator_type, func):
@@ -49,7 +49,7 @@ class factroy:
         if indicator_type == 5:
             return runqueue_latency(5, gen_queue_lentacy)
 
-if __name__ == '__main__':
-    fac = factroy()
-    tmp = fac.get_plugin(1)
-    tmp.start_func()
+# if __name__ == '__main__':
+#     fac = factroy()
+#     tmp = fac.get_plugin(1)
+#     tmp.start_func()

@@ -28,21 +28,27 @@ def print_hello(tb_name, date_time, rows):
 
 @req_proc_view.route("/get_req_param", methods =['GET', 'POST'])
 def get_request_param():
+    msg["exec"] = False
     msg["user_tag"] = request.remote_addr 
     tmp_list = request.form.getlist("vehicle")
     msg["indicator"] = tmp_list
-    print("获取时间信息")
+    interval = request.form.get("interval_time")
     date = request.form.get("date")
     time = request.form.get("time")
-    if date == None or time == None:
-        return "time is None"
     date_time = date+" "+time
-    return
     msg["time"] = date_time
-    msg["rows"] = 10
-    msg["interval"] = 5 #刷新的时间
-    msg["exec_time_length"]
-    # pool.submit(send_message, msg)
+    msg["rows"] = 10 
+    msg["interval"] = interval #刷新的时间
+    msg["exec_time_length"] = 600 #主要限制bpf程序执行的时间范围
+    msg["exec"] = False
+    if date == None and time == None:
+        print("date  and time are None")
+        msg["exec"] = True
+        pool.submit(send_message, msg)  
+        return render_template("/admin/proc_wakeuptime.html")
+    date_time = date+" "+time
+    msg["time"] = date_time
+    pool.submit(send_message, msg)  
     return render_template("/admin/proc_wakeuptime.html")      
           
 @req_proc_view.route("/wakeup_lantency")
@@ -71,7 +77,55 @@ def update_thread_count_data():
         value = k[1].decode("utf-8")
         index = value.rfind("_")
         proc_name = value[:index-1]
-        thread_coount = value[index+1:]
+        thread_count = value[index+1:]
         name.append(proc_name)
-        count.append(thread_coount)
+        count.append(thread_count)
     return jsonify({"process_name":name, "count": count})
+
+@req_proc_view.route("/queue_length")
+def update_queue_length_data():
+    cpu = [] 
+    length = []
+    user_tag = request.remote_addr
+    redis_key = "queue_length@"+user_tag
+    res_list = read_from_redis(redis_key, 20)
+    for k in res_list:
+        value = k[1].decode("utf-8")
+        index = value.rfind("_")
+        cpu_num = value[:index-1]
+        _len = value[index+1:]
+        cpu.append(cpu_num)
+        length.append(_len)
+    return jsonify({"cpu":cpu, "length":length})
+
+@req_proc_view.route("/queue_lentacy")
+def update_queue_lantency_data():
+    cpu = [] 
+    lantency = []
+    user_tag = request.remote_addr
+    redis_key = "runqueue_lentacy@"+user_tag
+    res_list = read_from_redis(redis_key, 20)
+    for k in res_list:
+        value = k[1].decode("utf-8")
+        index = value.rfind("_")
+        cpu_num = value[:index-1]
+        lat = value[index+1:]
+        cpu.append(cpu_num)
+        lantency.append(lat)
+    return jsonify({"cpu":cpu, "lantency":lantency})
+
+@req_proc_view.route("/core_dispacher_count")
+def update_core_dispacher_count_data():
+    cpu = [] 
+    dispatch_count = []
+    user_tag = request.remote_addr
+    redis_key = "core_dispacher_times@"+user_tag
+    res_list = read_from_redis(redis_key, 20)
+    for k in res_list:
+        value = k[1].decode("utf-8")
+        index = value.rfind("_")
+        cpu_num = value[:index-1]
+        count = value[index+1:]
+        cpu.append(cpu_num)
+        dispatch_count.append(count)
+    return jsonify({"cpu":cpu, "dispacher_count":dispatch_count})

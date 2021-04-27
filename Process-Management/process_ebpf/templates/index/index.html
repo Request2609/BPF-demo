@@ -25,8 +25,8 @@
     <div class="layui-input-inline " onchange="disable_interval()">
       开始时间&nbsp;&nbsp;<input type="text" style="width: 300px;height:20px;" class="layui-input" name ="time" id="time" placeholder="HH:mm:ss"disabled>
     </div><br>
-  <div id="label">
-  
+  <div id="interval_times">
+      请设置刷新的时间(s)&nbsp;&nbsp;<input type="text" name="interval_time" id="interval_time">
   </div><br>
   <input type="submit" value="提交">
 </form>
@@ -34,12 +34,11 @@
 <script  type="text/javascript">
   function real_time_interval(){
     disable_date_time()
-    document.getElementById("label").innerHTML = "请设置刷新的时间(s)&nbsp;&nbsp;<input type=\"text\" name=\"interval_time\">"
   }
   function enable_date_time(){
     document.getElementById('date').removeAttribute('disabled')
     document.getElementById('time').removeAttribute('disabled')
-    document.getElementById("label").innerHTML = "请设置刷新的时间(s)&nbsp;&nbsp;<input type=\"text\" name=\"interval_time\">"
+
   }
   function disable_date_time() {
     document.getElementById('date').value="0000-00-00"

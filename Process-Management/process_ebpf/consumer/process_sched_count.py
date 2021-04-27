@@ -6,6 +6,8 @@ from multiprocessing import cpu_count
 from init_db import influx_client
 from db_modules import write2db
 from datetime import datetime
+from config import DatabaseType
+
 #记录每秒钟每个核的调度次数，仅限四核机器
 prog_text="""
 #include <uapi/linux/ptrace.h>
@@ -23,7 +25,6 @@ int count_sched(struct pt_regs *ctx, struct task_struct *prev) {
     key.curr_pid = bpf_get_current_pid_tgid();
     key.prev_pid = prev->pid;
     key.cpu = bpf_get_smp_processor_id();
-    // could also use `stats.increment(key);`
     val = stats.lookup_or_try_init(&key, &zero);
     if (val) {
       (*val)++;
@@ -58,7 +59,8 @@ def count_cpu():
     test_data = lmp_data_cpu_core_4(datetime.now().isoformat(), 'glob', dispatch_count[0], 
     dispatch_count[1], dispatch_count[2], dispatch_count[3])
     write2db(data_struct, test_data, influx_client, DatabaseType.INFLUXDB.value)
-def gen_dispatch_count():
+def gen_dispatch_count(exec_length):
     print("执行gen_dispatch_count")
-    while 1:
+    while exec_length >= 0:
         count_cpu()
+        exec_length-=1

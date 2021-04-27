@@ -7,6 +7,7 @@ import argparse
 from init_db import influx_client
 from db_modules import write2db
 from datetime import datetime
+from config import DatabaseType
 #度量任务在等待一个回合的运行队列上的延时，us输出
 #内核会通过try_to_wake_up把任务唤醒, 这会涉及到这sched_wakeup和sched_waking两个tracepoint.
 #sched_waking和sched_wakeup在wakeup task过程中肯定都会发生, sched_waking事件在ttwu开始的时候触发, 
@@ -108,7 +109,10 @@ def queue_lentacy():
     dispatch_lentacy[1], dispatch_lentacy[2], dispatch_lentacy[3])
     print(dispatch_lentacy[0], "  ", dispatch_lentacy[1],"     ", dispatch_lentacy[2], "         ", dispatch_lentacy[3])
     write2db(data_struct, test_data, influx_client, DatabaseType.INFLUXDB.value)
-def gen_queue_lentacy():
+def gen_queue_lentacy(exec_length):
     print("进程队列延时")
     while 1:
+        exec_length-=1
         queue_lentacy()
+        
+        

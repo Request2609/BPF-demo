@@ -15,6 +15,9 @@
 <body style="height: 100%; margin: 0">
     <div id="main0"></div>
     <div id="main1"></div>
+    <div id="main2"></div>
+    <div id="main3"></div>
+    <div id="main4"></div>
 </body>
 
 
@@ -75,9 +78,6 @@
     }
         }]
     };
-    if (option0 && typeof option0 === "object") {
-                myChart.setOption(option0, true);
-        }
         // 指定图表的配置项和数据
     var myChart1 = echarts.init(document.getElementById('main1'));
     var option1 = {
@@ -133,10 +133,197 @@
     }
     }]
     };
+    var myChart2 = echarts.init(document.getElementById('main2'));
+    // 指定图表的配置项和数据
+    var option2 = {
+        title:{
+            x:"center",
+            text:"四核cpu进程运行队列的长度"
+        },
+
+        tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'cross',
+                        label: {
+                            backgroundColor: '#6a7985'
+                        }
+                    }
+                },
+        xAxis: {
+            name: '进程',
+            type: 'category',
+            data: [],
+        axisLabel: {
+                interval:0,      //坐标轴刻度标签的显示间隔(在类目轴中有效) 0:显示所有  1：隔一个显示一个 :3：隔三个显示一个...
+                rotate:-20    //标签倾斜的角度，显示不全时可以通过旋转防止标签重叠（-90到90）
+            }
+        },
+        grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+        yAxis: {
+            name: '进程个数',
+            type: 'value'
+        },
+        series: [{
+            data: [],
+            type: 'line',
+            itemStyle: {
+            normal: {
+            lineStyle:{  
+                        color:'#00FF00'  
+                },
+            label: {
+                show: true,      //开启显示
+                position: 'top', //在上方显示
+                textStyle: {     //数值样式
+                    color: 'black',
+                    fontSize: 16
+                }
+            }
+        }
+    }
+        }]
+    };
+    var myChart3 = echarts.init(document.getElementById('main3'));
+    // 指定图表的配置项和数据
+    var option3 = {
+        title:{
+            x:"center",
+            text:"cpu调度调度延时"
+        },
+
+        tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'cross',
+                        label: {
+                            backgroundColor: '#6a7985'
+                        }
+                    }
+                },
+        xAxis: {
+            name: 'cpu',
+            type: 'category',
+            data: [],
+        axisLabel: {
+                interval:0,      //坐标轴刻度标签的显示间隔(在类目轴中有效) 0:显示所有  1：隔一个显示一个 :3：隔三个显示一个...
+                rotate:-20    //标签倾斜的角度，显示不全时可以通过旋转防止标签重叠（-90到90）
+            }
+        },
+        grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+        yAxis: {
+            name: '延时',
+            type: 'value'
+        },
+        series: [{
+            data: [],
+            type: 'line',
+            itemStyle: {
+            normal: {
+            lineStyle:{  
+                        color:'#00FF00'  
+                },
+            label: {
+                show: true,      //开启显示
+                position: 'top', //在上方显示
+                textStyle: {     //数值样式
+                    color: 'black',
+                    fontSize: 16
+                }
+            }
+        }
+    }
+        }]
+    };
+    var myChart4 = echarts.init(document.getElementById('main4'));
+    // 指定图表的配置项和数据
+    var option4 = {
+        title:{
+            x:"center",
+            text:"cpu队列调度延时"
+        },
+
+        tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'cross',
+                        label: {
+                            backgroundColor: '#6a7985'
+                        }
+                    }
+                },
+        xAxis: {
+            name: 'cpu',
+            type: 'category',
+            data: [],
+        axisLabel: {
+                interval:0,      //坐标轴刻度标签的显示间隔(在类目轴中有效) 0:显示所有  1：隔一个显示一个 :3：隔三个显示一个...
+                rotate:-20    //标签倾斜的角度，显示不全时可以通过旋转防止标签重叠（-90到90）
+            }
+        },
+        grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+        yAxis: {
+            name: '延时',
+            type: 'value'
+        },
+        series: [{
+            data: [],
+            type: 'line',
+            itemStyle: {
+            normal: {
+            lineStyle:{  
+                        color:'#00FF00'  
+                },
+            label: {
+                show: true,      //开启显示
+                position: 'top', //在上方显示
+                textStyle: {     //数值样式
+                    color: 'black',
+                    fontSize: 16
+                }
+            }
+        }
+    }
+        }]
+    };
+
+    myChart.setOption(option0, true);
     myChart1.setOption(option1)
+    myChart2.setOption(option2)
+    myChart3.setOption(option3)
+    myChart4.setOption(option4)
+
     chartArr.push(myChart)
     chartArr.push(myChart1)
+    chartArr.push(myChart2)
+    chartArr.push(myChart3)
+    chartArr.push(myChart4)
 
+function get_wakeuptime_data() {
+            $.ajax({
+                url: "/admin/wakeup_lantency",
+                success: function (data) {
+                    option0.xAxis.data=data.process_name;
+                    option0.series[0].data=data.lantency;
+                    chartArr[0].setOption(option0);
+                }
+            })
+        }
 function get_wakeuptime_data() {
             $.ajax({
                 url: "/admin/wakeup_lantency",
@@ -158,9 +345,45 @@ function get_thread_count_data(){
         }
     })
 }
+function get_queue_length_data() {
+            $.ajax({
+                url: "/admin/queue_length",
+                success: function (data) {
+                    option2.xAxis.data=data.cpu;
+                    option2.series[0].data=data.length;
+                    chartArr[2].setOption(option2);
+                }
+            })
+        }
+
+function get_core_dispacher_data() {
+            $.ajax({
+                url: "/admin/core_dispacher_count",
+                success: function (data) {
+                    option3.xAxis.data=data.cpu;
+                    option3.series[0].data=data.dispacher_count;
+                    chartArr[3].setOption(option3);
+                }
+            })
+        }
+
+function get_queue_lantency_data() {
+            $.ajax({
+                url: "/admin/queue_lentacy",
+                success: function (data) {
+                    option4.xAxis.data=data.cpu;
+                    option4.series[0].data=data.lantency;
+                    chartArr[4].setOption(option4);
+                }
+            })
+        }
 
 setInterval(get_wakeuptime_data, 3000)
 setInterval(get_thread_count_data, 3000)
+setInterval(get_queue_length_data, 3000)
+setInterval(get_core_dispacher_data, 3000)
+setInterval(get_queue_lantency_data, 3000)
+
         //这是关键
         window.onresize = function () {
             //循环每一个图表

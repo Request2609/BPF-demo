@@ -53,15 +53,17 @@ data_struct = {"measurement":'thread_create_count',
 
 b = BPF(text=prog) 
 def count_clone():
-    count = 0
     b.attach_kprobe(event=b.get_syscall_fnname("clone"), fn_name="do_trace")
     for k, v in b['dist'].items():
         test_data = lmp_data(datetime.now().isoformat(), 'glob', proc_list[i], count_list[i])
         write2db(data_struct, test_data, influx_client, DatabaseType.INFLUXDB.value) 
         
-def gen_count_clone():
-    while 1:
+def gen_count_clone(exec_length):
+    while exec_length >= 0:
+        start = time()
         count_clone()
+        stop = time()
+        exec_length -= (stop-time)
 
 
 

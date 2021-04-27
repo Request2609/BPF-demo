@@ -83,8 +83,7 @@ data_struct = {"measurement": 'proc_wakeuptime',
                "tags": ['glob', ],
                "fields": ['process_name', 'lantency']}
 b = BPF(text=bpf_text)
-def wakeuptime(count):
-    print("执行wakeup函数")
+def wakeuptime(count, exec_length):
     # initialize BPF
     b.attach_kprobe(event="schedule", fn_name="offcpu")
     b.attach_kprobe(event="try_to_wake_up", fn_name="waker")
@@ -92,9 +91,10 @@ def wakeuptime(count):
     if matched == 0:
         print("0 functions traced. Exiting.")
         exit()
-    while (1):
+    while (exec_length >= 0):
         try:
             sleep(count)
+            exec_length-=count
         except KeyboardInterrupt:
             exit()
         missing_stacks = 0
@@ -102,8 +102,6 @@ def wakeuptime(count):
         counts = b.get_table("counts")
         stack_traces = b.get_table("stack_traces")
         for k, v in sorted(counts.items(), key=lambda counts: counts[1].value):
-            # handle get_stackid errors
-            # check for an ENOMEM error
             if k.w_k_stack_id == -errno.ENOMEM:
                 missing_stacks += 1
                 continue
@@ -111,6 +109,6 @@ def wakeuptime(count):
             test_data = lmp_data(datetime.now().isoformat(), 'glob', k.waker.decode('utf-8'), v.value)
             write2db(data_struct, test_data, influx_client, DatabaseType.INFLUXDB.value)
         counts.clear()
-        
-def gen_wakeup_time():
-    wakeuptime(2)
+
+def gen_wakeup_time(exec_length):
+    wakeuptime(2, exec_length)

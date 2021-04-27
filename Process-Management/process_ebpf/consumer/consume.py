@@ -36,6 +36,8 @@ def call_plugin(obj):
 # "rows":,  #一次分页获取多少行
 # "interval":,  前端多长时间获取一次
 # "user_tag":  用户的标识，避免同一个用户进行重复操作
+# "interval":
+#"exec_time_length":程序执行的时长,不能无限执行下去
 # }
 # 定义一个回调函数来处理消息队列中的消息，这里是打印出来
 def callback(ch, method, properties, body):
@@ -43,14 +45,18 @@ def callback(ch, method, properties, body):
     param = body.decode("utf-8")
     param_map=json.loads(param)
     user_tag = param_map["user_tag"]
-    indicator_list = fileter_indicator(param_map["indicator"], user_tag)
-    date_time = param_map["time"]    
+    # indicator_list = fileter_indicator(param_map["indicator"], user_tag)#过滤客户端发送多次请求
+    indicator_list = param_map["indicator"]
+    if param_map["exec"] == False:
+        date_time = param_map["time"]    
     interval = param_map["interval"]
     rows = param_map["rows"]
+    exec_length = param_map["exec_time_length"]
     fac = factroy()
     for key in indicator_list:
-        # plugin = fac.get_plugin(indicator[key].value)
-        # pool.submit(plugin.start_func)
+        plugin = fac.get_plugin(indicator[key].value)
+        if param_map["exec"]:#要是想要获取实时数据的话就执行插件
+            pool.submit(plugin.start_func, exec_length)
         pool.submit(input_data_into_redis, key, date_time, rows, interval, user_tag)
 
 #清理数据
@@ -78,10 +84,8 @@ def get_message():
     channel.start_consuming()
 
 if __name__=="__main__":
-    print("consumer start")
     # 设置相应信号处理的handler
     signal.signal(signal.SIGINT, my_handler)
     signal.signal(signal.SIGHUP, my_handler)
     signal.signal(signal.SIGTERM, my_handler)
-
     get_message()
