@@ -81,3 +81,6 @@ def delete_tb_data(query_str):
 def redis_lset(key, value):
     for val in value:
         redis_client.lpush(key,value)
+
+def delete_a_key(redis_key):
+    return redis_client.delete(redis_key)

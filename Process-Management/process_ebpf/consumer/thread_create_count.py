@@ -59,6 +59,7 @@ def count_clone():
         write2db(data_struct, test_data, influx_client, DatabaseType.INFLUXDB.value) 
         
 def gen_count_clone(exec_length):
+    print("执行县城创建频率bpf")
     while exec_length >= 0:
         start = time()
         count_clone()

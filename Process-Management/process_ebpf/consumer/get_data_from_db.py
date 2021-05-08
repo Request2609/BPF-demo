@@ -2,12 +2,15 @@
 #encoding:utf-8
 
 from init_db import influx_client
-from db_modules import read_wakeuptime_from_db,read_thread_create_count_from_db, redis_lset,read_sched_count_from_db,read_queue_lantency_from_db, read_queue_length_from_db
+from db_modules import read_wakeuptime_from_db,read_thread_create_count_from_db, redis_lset,read_sched_count_from_db,read_queue_lantency_from_db, read_queue_length_from_db, delete_a_key
 
-def get_info_from_db(tb_name, date_time, rows, interval, redis_key):#分页查询
+def get_info_from_db(delete_key, tb_name, date_time, rows, interval, redis_key):#分页查询
     no_data_count = 100  #要是100次没有获取到数据，就退出
     page = 1
     flag = 0
+    if delete_key:
+        print("删除redis list key", redis_key)
+        delete_a_key(redis_key)
     while no_data_count > 0:
         if tb_name == "proc_wakeuptime":
             res = read_wakeuptime_from_db(influx_client, tb_name, date_time, rows, page) 
@@ -19,7 +22,6 @@ def get_info_from_db(tb_name, date_time, rows, interval, redis_key):#分页查�
             res = read_thread_create_count_from_db(influx_client, tb_name, date_time, rows, page)
             for key in zip(res):
                 flag = 1
-
                 input_thread_create_count_into_redis(key[0], redis_key)
         if tb_name == "core_dispacher_times":
             res = read_sched_count_from_db(influx_client, tb_name, date_time, rows, page)

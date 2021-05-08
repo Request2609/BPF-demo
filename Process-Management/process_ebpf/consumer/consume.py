@@ -9,7 +9,7 @@ from config import read_config,queue_Info,indicator
 from filter import fileter_indicator 
 from db_modules import delete_tb_data
 from input_data_to_redis import need_delete_tb_name_list, input_data_into_redis
-
+import datetime
 import signal
 import json
 cfg = read_config()
@@ -43,12 +43,15 @@ def call_plugin(obj):
 def callback(ch, method, properties, body):
     ch.basic_ack(delivery_tag = method.delivery_tag)
     param = body.decode("utf-8")
+    print("接收到消息:",param)
     param_map=json.loads(param)
     user_tag = param_map["user_tag"]
     # indicator_list = fileter_indicator(param_map["indicator"], user_tag)#过滤客户端发送多次请求
     indicator_list = param_map["indicator"]
     if param_map["exec"] == False:
-        date_time = param_map["time"]    
+        date_time = param_map["time"] 
+    else:
+        date_time = datetime.datetime.now()
     interval = param_map["interval"]
     rows = param_map["rows"]
     exec_length = param_map["exec_time_length"]
@@ -56,8 +59,9 @@ def callback(ch, method, properties, body):
     for key in indicator_list:
         plugin = fac.get_plugin(indicator[key].value)
         if param_map["exec"]:#要是想要获取实时数据的话就执行插件
+            print("执行BPF插件")
             pool.submit(plugin.start_func, exec_length)
-        pool.submit(input_data_into_redis, key, date_time, rows, interval, user_tag)
+        pool.submit(input_data_into_redis, param_map["exec"], key, date_time, rows, interval, user_tag)
 
 #清理数据
 def clear_data():
@@ -77,7 +81,7 @@ def my_handler(signum, frame):
     connection.close()
     
 def get_message():
-    # pool.submit(clear_data)#启动清理数据线程
+    pool.submit(clear_data)#启动清理数据线程
     # 告诉rabbitmq，用callback来接收消息
     channel.basic_consume(MQ_QUEUE_NAME,callback)
     # 开始接收信息，并进入阻塞状态，队列里有信息才会调用callback进行处理

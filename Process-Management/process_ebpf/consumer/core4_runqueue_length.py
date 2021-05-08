@@ -86,6 +86,7 @@ def get_queue_length():
         print(k.value, v.value)
 
 def gen_runqueue_length(exec_length):
+    print("执行运行队列长度bpf")
     timer = threading.Timer(1, get_queue_length)
     timer.start()
     while exec_length >= 0:
@@ -95,3 +96,4 @@ def gen_runqueue_length(exec_length):
         print(tmp[0], tmp[1], tmp[2], tmp[3])
         test_data = lmp_data_cpu_core_4(datetime.now().isoformat(), 'glob', tmp[0], tmp[1], tmp[2], tmp[3])
         write2db(data_struct, test_data, influx_client, DatabaseType.INFLUXDB.value)
+    timer.join()

@@ -64,3 +64,4 @@ def gen_dispatch_count(exec_length):
     while exec_length >= 0:
         count_cpu()
         exec_length-=1
+gen_dispatch_count(100)

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Vue 测试实例</title>
+<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+</head>
+<style>
+.class1{
+      background: #444;
+      color: #eee;
+    }
+</style>
+<body>
+<div id="app">
+  {{message}}
+  <!-- v-html指令 -->
+  <div v-html="message"></div>
+  <div>
+      <label for="r1">修改颜色</label><input type="checkbox" v-model="use" id="r1">
+      <br><br>
+      <!-- 绑定css设置的风格 HTML 属性中的值应使用 v-bind 指令-->
+      <div v-bind:class="{'class1':use}"> 
+          v-bind:class 指令
+      </div>
+      <pre><a v-bind:href="url">百度一下</a></pre>
+  </div>
+</div>
+
+<div id="app1">
+    <p v-if="seen">you can see me</p>
+    {{5+5}}<br>
+    {{ok?'Yes':'No'}}<br>
+    {{message.split('').reverse().join('')}}<br>
+    <div v-bind:id="'list-'+id">test vue</div>
+    <!-- v-model 指令用来在 input、select、textarea、checkbox、radio 等表单控件元素上创建双向数据绑定，根据表单上的值，自动更新绑定的元素的值。 -->
+    <input v-model="message">
+    <p>{{message}}</p>
+    <!-- 设置回调函数 -->
+    <button v-on:click="reverseStr">反转字符串</button><br>
+    <!-- 过滤器 -->
+    {{message|testFilter}}
+    <p v-if="seen">"hello world"</p>
+    <!-- 条件控制语句 -->
+    <div v-if="Math.random()>0.5">
+      <p>随机数大于0.5</p>
+    </div>
+    <div v-else>
+        随机数小于0.5
+    </div>
+    <!-- 默认是不显示的 -->
+    <template v-if="ok">test else if</template>
+    <ol v-for="site in sites">
+      <li>{{site.name}}</li>
+    </ol>
+    <ul>
+      <li v-for="value in object">
+        {{value}}
+      </li>
+    </ul>
+    <ul>
+      <li v-for="(key,value) in object">
+        {{key}}:{{value}}
+      </li>
+    </ul>
+    <ul>
+      <li v-for="n in 10">
+       {{ n }}
+      </li>
+    </ul>
+</div> 
+<script>
+new Vue({
+  el: '#app',
+  data: {
+    message: '<h1>Hello Vue.js!</h1>',
+    use : true,
+    url:"www.baidu.com"
+  }
+})
+
+new Vue({
+    el:"#app1",
+    data: { 
+      object:{
+        "name":"changke",
+        "url":"changke.com",
+        "sex":"man"
+      },
+      sites: [
+      { name: 'Amazon' },
+      { name: 'Google' },
+      { name: 'Taobao' }
+      ],
+        ok: true,
+        message:"ckckckckck",
+        id: 4,
+        seen:true      
+        },
+    methods:{
+      reverseStr:function(){
+        this.message = this.message.split('').reverse().join('')
+      }
+    },
+    filters:{
+      testFilter:function(value){
+        if (!value) return ''
+        value = value.toString()
+        return value.charAt(0).toUpperCase()+value.slice()
+      }
+    }
+})
+
+</script>
+</body>
+</html>

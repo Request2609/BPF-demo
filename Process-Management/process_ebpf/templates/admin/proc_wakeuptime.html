@@ -46,7 +46,8 @@
         axisLabel: {
                 interval:0,      //坐标轴刻度标签的显示间隔(在类目轴中有效) 0:显示所有  1：隔一个显示一个 :3：隔三个显示一个...
                 rotate:-20    //标签倾斜的角度，显示不全时可以通过旋转防止标签重叠（-90到90）
-            }
+            },
+            boundaryGap:false
         },
         grid: {
                     left: '3%',
@@ -56,16 +57,21 @@
                 },
         yAxis: {
             name: '延时:毫秒',
-            type: 'value'
+            type: 'value',
+            boundaryGap: [0, '50%']
         },
         series: [{
             data: [],
             type: 'line',
+            stack: 'a',
+            areaStyle: {
+		        normal: {}
+		    },
             itemStyle: {
             normal: {
             lineStyle:{  
-                        color:'#00FF00'  
-                },
+                        
+            },
             label: {
                 show: true,      //开启显示
                 position: 'top', //在上方显示
@@ -101,7 +107,8 @@
             axisLabel: {
                 interval:0,      //坐标轴刻度标签的显示间隔(在类目轴中有效) 0:显示所有  1：隔一个显示一个 :3：隔三个显示一个...
                 rotate:-20    //标签倾斜的角度，显示不全时可以通过旋转防止标签重叠（-90到90）
-            }
+            },
+            boundaryGap: false
         },
         grid: {
                     left: '3%',
@@ -111,15 +118,20 @@
                 },
         yAxis: {
             name: '创建次数',
-            type: 'value'
+            type: 'value',
+            boundaryGap: [0, '50%']
         },
         series: [{
             data: [],
             type: 'line',
+            stack: 'a',
+            areaStyle: {
+		        normal: {}
+		    },
             itemStyle: {
             normal: {
             lineStyle:{  
-                        color:'#00ffaa'  
+                        // color:'#00ffaa'  
                 },
             label: {
                 show: true,      //开启显示
@@ -154,7 +166,8 @@
             name: '进程',
             type: 'category',
             data: [],
-        axisLabel: {
+            boundaryGap: false,
+            axisLabel: {
                 interval:0,      //坐标轴刻度标签的显示间隔(在类目轴中有效) 0:显示所有  1：隔一个显示一个 :3：隔三个显示一个...
                 rotate:-20    //标签倾斜的角度，显示不全时可以通过旋转防止标签重叠（-90到90）
             }
@@ -167,15 +180,20 @@
                 },
         yAxis: {
             name: '进程个数',
-            type: 'value'
+            type: 'value',
+            boundaryGap: [0, '50%']
         },
         series: [{
             data: [],
             type: 'line',
+            stack: 'a',
+            areaStyle: {
+		        normal: {}
+		    },
             itemStyle: {
             normal: {
             lineStyle:{  
-                        color:'#00FF00'  
+                        // color:'#00FF00'  
                 },
             label: {
                 show: true,      //开启显示
@@ -209,6 +227,7 @@
         xAxis: {
             name: 'cpu',
             type: 'category',
+            boundaryGap: false,
             data: [],
         axisLabel: {
                 interval:0,      //坐标轴刻度标签的显示间隔(在类目轴中有效) 0:显示所有  1：隔一个显示一个 :3：隔三个显示一个...
@@ -223,15 +242,20 @@
                 },
         yAxis: {
             name: '延时',
-            type: 'value'
+            type: 'value',
+            boundaryGap: [0, '50%']
         },
         series: [{
             data: [],
             type: 'line',
+            stack: 'a',
+            areaStyle: {
+		        normal: {}
+		    },
             itemStyle: {
             normal: {
             lineStyle:{  
-                        color:'#00FF00'  
+                        // color:'#00FF00'  
                 },
             label: {
                 show: true,      //开启显示
@@ -265,6 +289,7 @@
         xAxis: {
             name: 'cpu',
             type: 'category',
+            boundaryGap: false,
             data: [],
         axisLabel: {
                 interval:0,      //坐标轴刻度标签的显示间隔(在类目轴中有效) 0:显示所有  1：隔一个显示一个 :3：隔三个显示一个...
@@ -279,15 +304,21 @@
                 },
         yAxis: {
             name: '延时',
-            type: 'value'
+            type: 'value',
+            boundaryGap: [0, '50%']
         },
         series: [{
             data: [],
             type: 'line',
+            stack: 'a',
+            areaStyle: {
+		        normal: {}
+		    },
+            smooth:true,
             itemStyle: {
             normal: {
             lineStyle:{  
-                        color:'#00FF00'  
+                        // color:'#00FF00'  
                 },
             label: {
                 show: true,      //开启显示

@@ -111,4 +111,5 @@ def wakeuptime(count, exec_length):
         counts.clear()
 
 def gen_wakeup_time(exec_length):
+    print("执行wakeup_time")
     wakeuptime(2, exec_length)

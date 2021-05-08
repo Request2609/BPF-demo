@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Vue 测试实例 - vue　learning(runoob.com)</title>
+<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+<style>
+    .active{
+        width: 100px;
+        height: 100px;
+        background-color: aqua;
+    }
+    .base{
+        width: 100px;
+        height: 100px;
+        background-color: black;
+    }
+    .danger-text{
+        background-color:red;
+    }
+</style>
+</head>
+<body>
+<div id="app">
+  <p>原始字符串: {{ message }}</p>
+  <p>计算后反转字符串: {{ reversedMessage }}</p>
+    <p style="font-size: 25px;">计数器{{counter}}</p>
+    <button @click="counter++" style="font-size:25px;">点我</button><br>
+    千米:<input type="text" v-model="kilometer">
+    米:<input type="text" v-model="meter">
+    <p id="info"></p>
+    <div v-bind:class="{'active':isActive}"></div>
+    
+    <button @click="greet" style="font-size:25px;">点我增加颜色框</button><br>
+</div>
+
+<script>
+var vm = new Vue({
+  el: '#app',
+  data: {
+    name :"changke",
+    meter:0,
+    kilometer:0,
+    counter:1,
+    message: 'Runoob!',
+    isActive:false,
+    error: {
+      value: true,
+      type: 'fatal'
+    }
+  },
+  watch:{
+    kilometer:function(val){
+        this.kilometer = val ;
+        this.meter = this.kilometer*1000
+    },
+    meter:function(val){
+        this.meter = val ;
+        this.kilometer = this.meter/1000*1.0
+    }
+  },
+  methods:{
+    greet:function(event){
+        alert("Hello ", this.name)
+        this.isActive = true
+        if (event){
+            alert(event.target.tagName)
+        }
+    }
+  },
+  computed: {
+    classObject:function(){
+        return {base: true,
+        active: this.isActive && !this.error.value,
+        'text-danger': this.error.value && this.error.type === 'fatal'}   
+    },
+    // 计算属性的 getter
+    reversedMessage: function () {
+      // `this` 指向 vm 实例
+      return this.message.split('').reverse().join('')
+    }
+  }
+})
+
+vm.$watch('counter',function(nval, oval){
+    alert("计数器值变化:"+oval+"变为"+nval+"!")
+})
+vm.$watch('kilometer',function(newValue, oldValue){
+    document.getElementById("info").innerHTML = "修改值为:"+oldValue+"变成"+newValue
+})
+app.greet()
+</script>
+</body>
+</html>
